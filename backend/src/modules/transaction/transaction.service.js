@@ -2,8 +2,9 @@ import prisma from "../../config/db.js";
 import { detectAnomaly } from "./anomaly.service.js";
 import { sendEmail } from "../../config/sendgrid.js";
 import { checkBudget } from "../budget/budget.service.js";
+
 export const createTransaction = async (userId, data) => {
-  // 1️⃣ Validate category belongs to this user
+
   const category = await prisma.category.findFirst({
     where: {
       id: data.categoryId,
@@ -15,7 +16,6 @@ export const createTransaction = async (userId, data) => {
     throw new Error("Invalid category for this user");
   }
 
-  // 2️⃣ Fetch past transactions for anomaly detection
   const pastTransactions = await prisma.transaction.findMany({
     where: {
       userId,
@@ -25,11 +25,10 @@ export const createTransaction = async (userId, data) => {
   });
 
   const isAnomaly = detectAnomaly(
-    pastTransactions.map((t) => Number(t.amount)),
-    Number(data.amount),
+    pastTransactions.map((t) => t.amount),
+    Number(data.amount)
   );
 
-  // 3️⃣ Create transaction
   const transaction = await prisma.transaction.create({
     data: {
       type: data.type,
@@ -42,38 +41,48 @@ export const createTransaction = async (userId, data) => {
       categoryId: data.categoryId,
     },
   });
+
   if (data.type === "expense") {
-    const month = new Date(data.date).getMonth() + 1;
-    const year = new Date(data.date).getFullYear();
+
+    const transactionDate = new Date(data.date);
+    const month = transactionDate.getMonth() + 1;
+    const year = transactionDate.getFullYear();
 
     const budgetStatus = await checkBudget(
       userId,
       data.categoryId,
       month,
-      year,
+      year
     );
 
     if (
-      budgetStatus &
-      (budgetStatus.totalSpent > budgetStatus.budget.monthlyLimit)
+      budgetStatus.budget &&
+      budgetStatus.totalSpent > budgetStatus.budget.monthlyLimit
     ) {
+
       const user = await prisma.user.findUnique({
-        where: { id: data.categoryId },
+        where: { id: userId },
       });
 
-      await sendEmail({
-        to: user.email,
-        subject: "⚠ Budget Limit Exceeded",
-        text: `Your spending for category ${category.name} budget.`,
-        html: `<h2>Budget Alert</h2>
+      if (user) {
+        await sendEmail({
+          to: user.email,
+          subject: "⚠ Budget Limit Exceeded",
+          text: `Your spending for category ${category.name} exceeded the budget.`,
+          html: `<h2>Budget Alert</h2>
           <p>Category: <b>${category.name}</b></p>
           <p>Budget Limit: ₹${budgetStatus.budget.monthlyLimit}</p>
           <p>Total Spent: ₹${budgetStatus.totalSpent}</p>
-          <p>Please review your expenses.</p>`,
-      });
+          <p>Please review your expenses.</p>`
+        });
+      }
+
     }
+
   }
+
   return { transaction, isAnomaly };
+
 };
 
 export const getTransactions = async (userId) => {
@@ -85,6 +94,7 @@ export const getTransactions = async (userId) => {
 };
 
 export const deleteTransaction = async (userId, id) => {
+
   const transaction = await prisma.transaction.findFirst({
     where: { id, userId },
   });
@@ -96,4 +106,5 @@ export const deleteTransaction = async (userId, id) => {
   return prisma.transaction.delete({
     where: { id },
   });
+
 };
