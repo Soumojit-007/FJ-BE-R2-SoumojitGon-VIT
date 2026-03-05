@@ -42,7 +42,13 @@ export const checkBudget = async (userId, categoryId, month, year) => {
     },
   });
 
-  if (!budget) return null;
+  if (!budget){
+    return{
+      budget: null,
+      totalSpent:0,
+      remaining:null
+    }
+  }
 
   const totalSpent = await prisma.transaction.aggregate({
     where: {

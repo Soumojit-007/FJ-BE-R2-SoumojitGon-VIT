@@ -1,12 +1,13 @@
-import axiosInstance from "../api/axios";
 
-const getTransactions = async () => {
-  const res = await axiosInstance.get("/transactions");
-  return res.data;
-};
+import axiosInstance from "../api/axios";
 
 const createTransaction = async (data) => {
   const res = await axiosInstance.post("/transactions", data);
+  return res.data;
+};
+
+const getTransactions = async () => {
+  const res = await axiosInstance.get("/transactions");
   return res.data;
 };
 
@@ -16,7 +17,7 @@ const deleteTransaction = async (id) => {
 };
 
 export default {
-  getTransactions,
   createTransaction,
+  getTransactions,
   deleteTransaction
 };
