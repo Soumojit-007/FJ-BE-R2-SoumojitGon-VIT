@@ -20,40 +20,53 @@ import aiRoutes from "./modules/ai/ai.routes.js";
 
 const app = express();
 
-// Core Middlewares
+/* -------------------- CORE MIDDLEWARES -------------------- */
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-// app.use(cors());
-app.use(cors({
-  origin: "*",
-  credentials: true,
-}))
+
+app.use(
+  cors({
+    origin: [
+      "http://localhost:5173", // local frontend
+      "http://localhost:3000", // optional
+    ],
+    credentials: true,
+  })
+);
+
 app.use(helmet());
 app.use(morgan("dev"));
-app.use("/api", apiLimiter);
 
-// Health Check
+/* -------------------- HEALTH CHECK -------------------- */
+
 app.get("/", (req, res) => {
   res.json({ message: "Finance Tracker API Running 🚀" });
 });
 
-// Route Registration
-app.use("/api/auth", authRoutes);
-app.use("/api/users", userRoutes);
-app.use("/api/categories", categoryRoutes);
-app.use("/api/transactions", transactionRoutes);
-app.use("/api/budgets", budgetRoutes);
-app.use("/api/reports", reportRoutes);
-app.use("/api/receipts", receiptRoutes);
-app.use("/api/bank", bankRoutes);
-app.use("/api/ai", aiRoutes);
+/* -------------------- AUTH ROUTES (NO RATE LIMIT) -------------------- */
 
-// 404 Handler
+app.use("/api/auth", authRoutes);
+
+/* -------------------- PROTECTED ROUTES (WITH RATE LIMIT) -------------------- */
+
+app.use("/api/users", apiLimiter, userRoutes);
+app.use("/api/categories", apiLimiter, categoryRoutes);
+app.use("/api/transactions", apiLimiter, transactionRoutes);
+app.use("/api/budgets", apiLimiter, budgetRoutes);
+app.use("/api/reports", apiLimiter, reportRoutes);
+app.use("/api/receipts", apiLimiter, receiptRoutes);
+app.use("/api/bank", apiLimiter, bankRoutes);
+app.use("/api/ai", apiLimiter, aiRoutes);
+
+/* -------------------- 404 HANDLER -------------------- */
+
 app.use((req, res) => {
   res.status(404).json({ error: ERROR_MESSAGES.NOT_FOUND });
 });
 
-// Global Error Handler
+/* -------------------- GLOBAL ERROR HANDLER -------------------- */
+
 app.use(errorHandler);
 
 export default app;
