@@ -1,7 +1,10 @@
 import prisma from "../../config/db.js";
 
 export const setBudget = async (userId, data) => {
-  const { categoryId, monthlyLimit, month, year } = data;
+  const categoryId = data.categoryId;
+  const monthlyLimit = parseFloat(data.monthlyLimit);
+  const month = parseInt(data.month);
+  const year = parseInt(data.year);
 
   return prisma.budget.upsert({
     where: {
@@ -26,6 +29,8 @@ export const setBudget = async (userId, data) => {
 };
 
 export const checkBudget = async (userId, categoryId, month, year) => {
+  month = parseInt(month);
+  year = parseInt(year);
   const budget = await prisma.budget.findUnique({
     where: {
       userId_categoryId_month_year: {

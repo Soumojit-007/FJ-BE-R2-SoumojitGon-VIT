@@ -1,12 +1,12 @@
 import dotenv from "dotenv";
 dotenv.config();
-
+import passport from "./config/passport.js";
 import app from "./app.js";
 import prisma from "./config/db.js";
 import { SUCCESS_MESSAGES } from "./constants/index.js";
 
 const PORT = process.env.PORT || 5000;
-
+app.use(passport.initialize());
 const startServer = async () => {
   try {
     await prisma.$connect();

@@ -45,5 +45,12 @@ export const loginUser = async ({ email, password }) => {
     { expiresIn: process.env.JWT_EXPIRES_IN }
   );
 
-  return { user, token };
+  return {
+  user: {
+    id: user.id,
+    name: user.name,
+    email: user.email
+  },
+  token
+};
 };

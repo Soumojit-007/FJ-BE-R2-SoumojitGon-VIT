@@ -1,6 +1,7 @@
 import prisma from "../../config/db.js";
 import { detectAnomaly } from "./anomaly.service.js";
-
+import { sendEmail } from "../../config/sendgrid.js";
+import { checkBudget } from "../budget/budget.service.js";
 export const createTransaction = async (userId, data) => {
   // 1️⃣ Validate category belongs to this user
   const category = await prisma.category.findFirst({
@@ -24,8 +25,8 @@ export const createTransaction = async (userId, data) => {
   });
 
   const isAnomaly = detectAnomaly(
-    pastTransactions.map(t => Number(t.amount)),
-    Number(data.amount)
+    pastTransactions.map((t) => Number(t.amount)),
+    Number(data.amount),
   );
 
   // 3️⃣ Create transaction
@@ -41,7 +42,37 @@ export const createTransaction = async (userId, data) => {
       categoryId: data.categoryId,
     },
   });
+  if (data.type === "expense") {
+    const month = new Date(data.date).getMonth() + 1;
+    const year = new Date(data.date).getFullYear();
 
+    const budgetStatus = await checkBudget(
+      userId,
+      data.categoryId,
+      month,
+      year,
+    );
+
+    if (
+      budgetStatus &
+      (budgetStatus.totalSpent > budgetStatus.budget.monthlyLimit)
+    ) {
+      const user = await prisma.user.findUnique({
+        where: { id: data.categoryId },
+      });
+
+      await sendEmail({
+        to: user.email,
+        subject: "⚠ Budget Limit Exceeded",
+        text: `Your spending for category ${category.name} budget.`,
+        html: `<h2>Budget Alert</h2>
+          <p>Category: <b>${category.name}</b></p>
+          <p>Budget Limit: ₹${budgetStatus.budget.monthlyLimit}</p>
+          <p>Total Spent: ₹${budgetStatus.totalSpent}</p>
+          <p>Please review your expenses.</p>`,
+      });
+    }
+  }
   return { transaction, isAnomaly };
 };
 
