@@ -1,8 +1,6 @@
 import { useState, useEffect } from "react";
 import transactionService from "../services/transactionService";
 import categoryService from "../services/categoryService";
-import { log } from "node:console";
-
 const TransactionForm = ({ refresh }) => {
   const [categories, setCategories] = useState([]);
 

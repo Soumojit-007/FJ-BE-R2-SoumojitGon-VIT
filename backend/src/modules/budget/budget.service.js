@@ -31,6 +31,7 @@ export const setBudget = async (userId, data) => {
 export const checkBudget = async (userId, categoryId, month, year) => {
   month = parseInt(month);
   year = parseInt(year);
+
   const budget = await prisma.budget.findUnique({
     where: {
       userId_categoryId_month_year: {
@@ -42,15 +43,16 @@ export const checkBudget = async (userId, categoryId, month, year) => {
     },
   });
 
-  if (!budget){
-    return{
+  // If no budget exists
+  if (!budget) {
+    return {
       budget: null,
-      totalSpent:0,
-      remaining:null
-    }
+      totalSpent: 0,
+      remaining: null,
+    };
   }
 
-  const totalSpent = await prisma.transaction.aggregate({
+  const totalSpentResult = await prisma.transaction.aggregate({
     where: {
       userId,
       categoryId,
@@ -65,9 +67,11 @@ export const checkBudget = async (userId, categoryId, month, year) => {
     },
   });
 
+  const totalSpent = totalSpentResult._sum.amount || 0;
+
   return {
     budget,
-    totalSpent: totalSpent._sum.amount || 0,
-    remaining: budget.monthlyLimit - (totalSpent._sum.amount || 0),
+    totalSpent,
+    remaining: budget.monthlyLimit - totalSpent,
   };
 };
