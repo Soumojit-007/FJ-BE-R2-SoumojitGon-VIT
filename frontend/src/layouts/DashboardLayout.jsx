@@ -3,7 +3,7 @@ import Sidebar from "../components/Sidebar";
 
 const DashboardLayout = ({ children }) => {
   return (
-    <div className="flex h-screen bg-gray-100">
+    <div className="flex min-h-screen bg-gray-100">
 
       <Sidebar />
 
@@ -11,7 +11,7 @@ const DashboardLayout = ({ children }) => {
 
         <Navbar />
 
-        <div className="p-6 overflow-y-auto">
+        <div className="p-4 md:p-6overflow-y-auto">
           {children}
         </div>
 

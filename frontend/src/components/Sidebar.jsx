@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 
 const Sidebar = () => {
   return (
-    <div className="w-64 h-screen bg-gray-900 text-white flex flex-col p-5">
+    <div className="hidden md:flex w-64 min-h-screen bg-gray-900 text-white flex-col p-5">
 
       <h2 className="text-xl font-bold mb-6">
         Menu

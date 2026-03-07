@@ -10,7 +10,7 @@ const AIInsights = () => {
   };
 
   return (
-    <div className="bg-white shadow rounded p-6 max-w-lg">
+    <div className="bg-white shadow rounded p-4 md:p-6 w-full max-w-lg">
 
       <h2 className="font-semibold mb-4">
         AI Financial Insights

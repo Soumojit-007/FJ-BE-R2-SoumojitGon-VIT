@@ -19,7 +19,7 @@ const BankImport = () => {
   };
 
   return (
-    <div className="bg-white shadow rounded p-6 max-w-md">
+    <div className="bg-white shadow rounded p-4 md:p-6 w-full max-w-md">
 
       <h2 className="font-semibold mb-4">
         Import Bank Statement

@@ -22,7 +22,7 @@ const CategoryForm = ({ refresh }) => {
 
       <h3 className="font-semibold mb-3">Add Category</h3>
 
-      <form onSubmit={handleSubmit} className="flex gap-3">
+      <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3">
 
         <input
           className="border p-2 rounded flex-1"

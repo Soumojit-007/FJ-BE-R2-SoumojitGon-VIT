@@ -24,7 +24,7 @@ const Categories = () => {
 
       <CategoryForm refresh={load} />
 
-      <div className="bg-white shadow rounded p-6">
+      <div className="bg-white shadow rounded md:p-6">
 
         <h2 className="text-lg font-semibold mb-4">
           Categories

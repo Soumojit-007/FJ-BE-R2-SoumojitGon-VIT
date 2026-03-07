@@ -17,7 +17,7 @@ const Dashboard = () => {
   if (!report) return <div className="p-6">Loading...</div>;
 
   return (
-    <div className="grid grid-cols-3 gap-6">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
 
       <div className="bg-white shadow rounded p-6">
         <h3 className="text-gray-500">Income</h3>

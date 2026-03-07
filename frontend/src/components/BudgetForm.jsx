@@ -28,12 +28,18 @@ const BudgetForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await budgetService.setBudget(form);
+      const payload = {
+    ...form,
+    month: Number(form.month),
+    year: Number(form.year),
+    monthlyLimit: Number(form.monthlyLimit)
+  };
+    await budgetService.setBudget(payload);
     alert("Budget set successfully");
   };
 
   return (
-    <div className="bg-white p-6 rounded shadow w-full max-w-md">
+    <div className="bg-white p-4 md:p-6 rounded shadow w-full max-w-md">
       <h2 className="text-lg font-semibold mb-4">Set Monthly Budget</h2>
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">

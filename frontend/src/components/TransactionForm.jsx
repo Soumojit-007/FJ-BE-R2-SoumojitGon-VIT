@@ -52,7 +52,7 @@ const TransactionForm = ({ refresh }) => {
     <div className="bg-white p-6 rounded shadow mb-6">
       <h2 className="text-lg font-semibold mb-4">Add Transaction</h2>
 
-      <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-4">
+      <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <select
           name="type"
           className="border p-2 rounded"
@@ -75,7 +75,7 @@ const TransactionForm = ({ refresh }) => {
           type="text"
           name="description"
           placeholder="Description"
-          className="border p-2 rounded col-span-2"
+          className="border p-2 rounded md:col-span-2"
           onChange={handleChange}
         />
 
@@ -102,7 +102,7 @@ const TransactionForm = ({ refresh }) => {
           ))}
         </select>
 
-        <button className="bg-blue-600 text-white py-2 rounded col-span-2 hover:bg-blue-700">
+        <button className="bg-blue-600 text-white py-2 rounded md:col-span-2 hover:bg-blue-700">
           Add Transaction
         </button>
       </form>

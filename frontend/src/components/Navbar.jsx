@@ -4,7 +4,7 @@ const Navbar = () => {
   const { logout, user } = useAuth();
 
   return (
-    <div className="flex justify-between items-center px-6 py-4 bg-gray-900 text-white shadow">
+    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center px-4 md:px-6 py-4 bg-gray-900 text-white shadow gap-2">
 
       <h1 className="text-xl font-semibold">
         Finance Tracker

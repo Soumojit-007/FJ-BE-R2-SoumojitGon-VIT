@@ -24,11 +24,11 @@ const Transactions = () => {
 
       <TransactionForm refresh={load} />
 
-      <div className="bg-white shadow rounded p-4">
+      <div className="bg-white shadow rounded p-4 overflow-x-auto">
 
         <h2 className="font-semibold mb-3">Transactions</h2>
 
-        <table className="w-full text-left">
+        <table className="w-full text-left min-w-[500px]">
 
           <thead>
             <tr className="border-b">

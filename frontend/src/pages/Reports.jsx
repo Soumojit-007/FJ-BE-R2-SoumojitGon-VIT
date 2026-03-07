@@ -36,7 +36,7 @@ const Reports = () => {
 
         <form
           onSubmit={handleSubmit}
-          className="flex gap-4 items-end"
+          className="flex flex-col md:flex-row gap-4 md:items-end"
         >
 
           <div className="flex flex-col">
@@ -73,7 +73,7 @@ const Reports = () => {
 
       {/* Report Result */}
       {report && (
-        <div className="grid grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
 
           <div className="bg-white shadow rounded p-6">
             <h3 className="text-gray-500">Total Income</h3>
