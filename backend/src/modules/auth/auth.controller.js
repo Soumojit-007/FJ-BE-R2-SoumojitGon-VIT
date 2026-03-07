@@ -26,7 +26,8 @@ export const googleAuth = async(req,res) =>{
     process.env.JWT_SECRET,
     {expiresIn :process.env.JWT_EXPIRES_IN}
   )
-  res.redirect(`https://financetracker-5kffn14k9-soumojit-007s-projects.vercel.app/dashboard?token=${token}`);
+  res.redirect(`https://financetrack-rho.vercel.app//dashboard?token=${token}`);
+  // res.redirect(`https://financetracker-5kffn14k9-soumojit-007s-projects.vercel.app/dashboard?token=${token}`);
   // res.redirect(`http://localhost:5173/dashboard?token=${token}`);
   //res.json({ message: "Google authentication successful", token, user });
 }
